@@ -1,0 +1,18 @@
+# AutoTube configuration
+# API keys go in .env (not here)
+
+llm:
+  model: "tbd"
+  temperature: 0.7
+  max_tokens: 4096
+
+tts:
+  provider: "tbd"
+  language: "zh-TW"
+
+video:
+  default_format: "medium"
+  resolution: "1920x1080"
+  fps: 30
+
+output_dir: "output"

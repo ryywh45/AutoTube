@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AutoTube is an automated YouTube video production system using multi-agent AI workflows. The pipeline covers: script writing, storyboarding, image generation (with RAG-based reuse), TTS (Chinese language), video synthesis, and metadata generation. Human-in-the-loop review gates exist at critical stages.
 
-**Status:** Architecture design phase — no runnable code yet.
+**Status:** Phase 1 — implementing project foundation.
 
 ## Pipeline Stages
 
@@ -18,7 +18,8 @@ AutoTube is an automated YouTube video production system using multi-agent AI wo
 
 ## Tech Stack
 
-- **Language:** Python
+- **Language:** Python (>=3.12)
+- **Package management:** uv — all dependency management (add, remove, lock, sync) must go through `uv`. Do not edit `pyproject.toml` dependencies by hand; use `uv add` / `uv remove` instead.
 - **Embeddings:** Gemini Embedding API
 - Chinese language support is a hard requirement for TTS.
 - LLM, TTS provider, image generation model, video tooling, and vector store are all TBD.

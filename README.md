@@ -2,7 +2,7 @@
 
 An automated YouTube video production system powered by multi-agent workflows. Each stage of video creation — from script writing to final rendering — is handled by specialized AI agents with human-in-the-loop review at critical checkpoints.
 
-> **Status:** Architecture design phase — pipeline structure and agent roles defined, implementation not yet started.
+> **Status:** Phase 1 complete — project foundation, data models, LLM abstraction layer, and pipeline orchestrator are implemented.
 
 ## Pipeline Stages
 
@@ -24,7 +24,8 @@ An automated YouTube video production system powered by multi-agent workflows. E
 
 | Component | Technology |
 |-----------|-----------|
-| Language | Python |
+| Language | Python >=3.12 |
+| Package Manager | uv |
 | LLM | TBD (LLM-agnostic design) |
 | Embedding | Gemini Embedding API |
 | TTS | TBD (Chinese language support required) |
