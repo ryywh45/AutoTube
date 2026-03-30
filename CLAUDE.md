@@ -6,7 +6,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AutoTube is an automated YouTube video production system using multi-agent AI workflows. The pipeline covers: script writing, storyboarding, image generation (with RAG-based reuse), TTS (Chinese language), video synthesis, and metadata generation. Human-in-the-loop review gates exist at critical stages.
 
-**Status:** Phase 1 — implementing project foundation.
+**Status:** Phase 1 complete — foundation in place. Phase 2 next (minimal E2E pipeline).
+
+## Development Commands
+
+```bash
+uv sync                        # Install all dependencies (including dev group)
+uv run pytest                  # Run all tests
+uv run pytest tests/test_llm.py           # Run a single test file
+uv run pytest tests/test_llm.py -k "test_stub"  # Run a specific test
+uv run ruff check src/ tests/  # Lint
+uv run ruff format src/ tests/ # Format
+uv add <package>               # Add a dependency
+uv add --group dev <package>   # Add a dev dependency
+```
+
+## Architecture
+
+The codebase follows a **src layout** (`src/autotube/`). Key layers:
+
+- **`models/`** — Pydantic data models for each domain: `script.py`, `storyboard.py`, `audio.py`, `video.py`, `metadata.py`. These define the input/output contracts between pipeline stages.
+- **`llm/`** — Provider-agnostic LLM abstraction. `base.py` defines `LLMProvider` (ABC with `generate` and `generate_structured` methods). `stub.py` provides a test double. New providers implement `LLMProvider`.
+- **`pipeline/`** — `stage.py` defines the `Stage` ABC (each stage has a `name` property and async `run` method). `orchestrator.py` runs stages sequentially with JSON-based pause/resume state persistence.
+- **`config.py`** — Merges `.env` (secrets) with `config.yaml` (non-secret settings) via pydantic-settings.
+
+Data flows through the pipeline as: concept → Script → Storyboard → Audio → Video → Metadata, with each stage receiving the previous stage's output.
 
 ## Pipeline Stages
 
