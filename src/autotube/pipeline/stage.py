@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import StrEnum
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from autotube.pipeline.run import PipelineRun
 
 
 class StageStatus(StrEnum):
@@ -34,11 +39,12 @@ class Stage(ABC):
         """Human-readable name of this stage."""
 
     @abstractmethod
-    async def run(self, input_data: Any) -> StageResult:
+    async def run(self, input_data: Any, pipeline_run: PipelineRun) -> StageResult:
         """Execute this stage.
 
         Args:
             input_data: Output from the previous stage (or initial input for the first stage).
+            pipeline_run: The current pipeline run context for artifact persistence.
 
         Returns:
             StageResult with status and output data.

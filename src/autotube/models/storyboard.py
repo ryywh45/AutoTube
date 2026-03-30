@@ -10,3 +10,10 @@ class StoryboardScene(BaseModel):
     narration: str
     visual_description: str
     image_path: Path | None = None
+
+
+class Storyboard(BaseModel):
+    """Complete storyboard for a video."""
+
+    title: str
+    scenes: list[StoryboardScene]
