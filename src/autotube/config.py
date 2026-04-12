@@ -17,7 +17,8 @@ class LLMProviderConfig(BaseModel):
 class TTSConfig(BaseModel):
     """TTS service configuration."""
 
-    provider: str = "tbd"
+    provider: str = "edge-tts"
+    voice: str = "zh-TW-HsiaoChenNeural"
     language: str = "zh-TW"
 
 

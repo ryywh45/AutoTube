@@ -4,6 +4,8 @@ import sys
 
 from autotube.agents.script_agent import ScriptAgent
 from autotube.agents.storyboard_agent import StoryboardAgent
+from autotube.agents.tts_agent import TTSAgent
+from autotube.agents.video_agent import VideoSynthesisAgent
 from autotube.config import load_settings
 from autotube.llm.gemini import GeminiProvider
 from autotube.pipeline.orchestrator import PipelineOrchestrator
@@ -24,6 +26,8 @@ async def main():
         stages=[
             ScriptAgent(llm=llm),
             StoryboardAgent(llm=llm),
+            TTSAgent(voice=settings.tts.voice),
+            VideoSynthesisAgent(fps=settings.video.fps),
         ],
     )
     results = await pipeline.run(run, initial_input=concept)
@@ -56,6 +60,26 @@ async def main():
             print(f"  Narration: {scene.narration[:60]}...")
             if scene.image_path:
                 print(f"  Image: {scene.image_path}")
+
+    # Print TTS results
+    tts_result = results.get("tts_agent")
+    if tts_result and tts_result.status == StageStatus.COMPLETED:
+        _, segments = tts_result.output
+        total = sum(s.duration_seconds for s in segments)
+        print(f"\n{'='*60}")
+        print(f"TTS: {len(segments)} segments, total {total:.1f}s")
+        print(f"{'='*60}")
+        for seg in segments:
+            print(f"  Scene {seg.scene_index}: {seg.duration_seconds:.1f}s -> {seg.audio_path}")
+
+    # Print video results
+    video_result = results.get("video_synthesis")
+    if video_result and video_result.status == StageStatus.COMPLETED:
+        vp = video_result.output
+        print(f"\n{'='*60}")
+        print(f"Video: {vp.output_path}")
+        print(f"Format: {vp.format}")
+        print(f"{'='*60}")
 
     # Check for failures
     for name, result in results.items():
