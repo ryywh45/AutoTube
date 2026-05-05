@@ -156,3 +156,34 @@ class TestVideoSynthesisAgent:
 
         # 3.0 + 4.0 = 7.0s < 60s → SHORT
         assert result.output.format == "short"
+
+    @pytest.mark.asyncio
+    async def test_concat_list_uses_absolute_paths(self, tmp_path: Path):
+        """Ensure concat_list.txt uses absolute paths so ffmpeg resolves them correctly."""
+        run = PipelineRun("test", output_root=tmp_path)
+        agent = VideoSynthesisAgent()
+        input_data = _make_input(tmp_path)
+
+        concat_contents: list[str] = []
+
+        original_make_fake = _make_fake_subprocess(tmp_path)
+
+        async def capturing_exec(*args, **kwargs):
+            args_list = list(args)
+            # Intercept the concat step to capture the list file
+            if "concat" in args_list and "-i" in args_list:
+                idx = args_list.index("-i") + 1
+                list_path = Path(args_list[idx])
+                if list_path.exists():
+                    concat_contents.append(list_path.read_text(encoding="utf-8"))
+            return await original_make_fake(*args, **kwargs)
+
+        with patch("asyncio.create_subprocess_exec", side_effect=capturing_exec):
+            result = await agent.run(input_data, run)
+
+        assert result.status == StageStatus.COMPLETED
+        assert len(concat_contents) == 1
+        for line in concat_contents[0].strip().splitlines():
+            # Each line should be: file '/absolute/path/to/scene_XX.mp4'
+            path_str = line.split("'")[1]
+            assert Path(path_str).is_absolute(), f"Path in concat list is not absolute: {path_str}"

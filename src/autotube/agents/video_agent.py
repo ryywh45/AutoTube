@@ -62,7 +62,7 @@ async def _concat_videos(
     """Concatenate scene videos into a single video using ffmpeg concat demuxer."""
     concat_list = output_path.parent / "concat_list.txt"
     concat_list.write_text(
-        "\n".join(f"file '{v}'" for v in scene_videos),
+        "\n".join(f"file '{v.resolve()}'" for v in scene_videos),
         encoding="utf-8",
     )
 
