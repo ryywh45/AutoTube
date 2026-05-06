@@ -2,7 +2,7 @@
 
 An automated YouTube video production system powered by multi-agent workflows. Each stage of video creation — from script writing to final rendering — is handled by specialized AI agents with human-in-the-loop review at critical checkpoints.
 
-> **Status:** Phase 1 complete — project foundation, data models, LLM abstraction layer, and pipeline orchestrator are implemented.
+> **Status:** Phase 2 complete — minimal E2E pipeline working (concept → rough video). Phase 3 next: script & storyboard quality.
 
 ## Pipeline Stages
 

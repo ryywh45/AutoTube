@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AutoTube is an automated YouTube video production system using multi-agent AI workflows. The pipeline covers: script writing, storyboarding, image generation (with RAG-based reuse), TTS (Chinese language), video synthesis, and metadata generation. Human-in-the-loop review gates exist at critical stages.
 
-**Status:** Phase 1 complete — foundation in place. Phase 2 next (minimal E2E pipeline).
+**Status:** Phase 2 complete — minimal E2E pipeline working. Phase 3 next (script & storyboard quality).
 
 ## Development Commands
 
