@@ -8,6 +8,7 @@ from autotube.agents.tts_agent import TTSAgent
 from autotube.agents.video_agent import VideoSynthesisAgent
 from autotube.config import load_settings
 from autotube.llm.gemini import GeminiProvider
+from autotube.llm.claude_code import ClaudeCodeProvider
 from autotube.pipeline.orchestrator import PipelineOrchestrator
 from autotube.pipeline.run import PipelineRun
 from autotube.pipeline.stage import StageStatus
@@ -19,15 +20,16 @@ async def main():
     concept = sys.argv[1] if len(sys.argv) > 1 else "為什麼天空是藍色的"
 
     settings = load_settings()
-    llm = GeminiProvider(api_key=settings.gemini_api_key)
+    # llm = GeminiProvider(api_key=settings.gemini_api_key)
+    llm = ClaudeCodeProvider()
     run = PipelineRun(concept, output_root=settings.output_dir)
 
     pipeline = PipelineOrchestrator(
         stages=[
             ScriptAgent(llm=llm),
-            StoryboardAgent(llm=llm),
-            TTSAgent(voice=settings.tts.voice),
-            VideoSynthesisAgent(fps=settings.video.fps),
+            # StoryboardAgent(llm=llm),
+            # TTSAgent(voice=settings.tts.voice),
+            # VideoSynthesisAgent(fps=settings.video.fps),
         ],
     )
     results = await pipeline.run(run, initial_input=concept)
